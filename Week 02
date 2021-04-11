@@ -1,0 +1,89 @@
+242. 有效的字母异位词
+
+给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
+
+示例 1:
+
+输入: s = "anagram", t = "nagaram"
+输出: true
+示例 2:
+
+输入: s = "rat", t = "car"
+输出: false
+说明:
+你可以假设字符串只包含小写字母。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/valid-anagram
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+代码：
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        c1 = [0]*26
+        c2 = [0]*26
+        for i in range(len(s)):
+            pos = ord(s[i])-ord('a')
+            c1[pos] = c1[pos] + 1
+        for i in range(len(t)):
+            pos = ord(t[i])-ord('a')
+            c2[pos] = c2[pos] + 1
+        j = 0 
+        stillOK = True
+        while j < 26 and stillOK:
+            if c1[j] == c2[j]:
+                j = j + 1
+            else:
+                stillOK = False
+        return stillOK
+        
+给定一个 N 叉树，返回其节点值的 前序遍历 。
+
+N 叉树 在输入中按层序遍历进行序列化表示，每组子节点由空值 null 分隔（请参见示例）。
+
+ 
+
+进阶：
+
+递归法很简单，你可以使用迭代法完成此题吗?
+
+ 
+589. N 叉树的前序遍历
+示例 1：
+
+输入：root = [1,null,3,2,4,null,5,6]
+输出：[1,3,5,6,2,4]
+示例 2：
+
+
+输入：root = [1,null,2,3,4,5,null,null,6,7,null,8,null,9,10,null,null,11,null,12,null,13,null,null,14]
+输出：[1,2,3,6,7,11,14,4,8,12,5,9,13,10]
+
+提示：
+
+N 叉树的高度小于或等于 1000
+节点总数在范围 [0, 10^4] 内
+通过次数73,504提交次数99,095
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+
+代码：
+class Solution:
+    def preorder(self, root: 'Node') -> List[int]:
+        #保存节点值
+        result = []
+        #前序遍历
+        def pre_order(root):
+            #跟节点非空入队列递归遍历
+            if root:
+                #节点值入队列
+                result.append(root.val)
+                #递归遍历
+                for node in root.children:
+                    pre_order(node)
+        pre_order(root)
+        return result
+
