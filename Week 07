@@ -1,0 +1,162 @@
+70. 爬楼梯
+假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
+
+每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+
+注意：给定 n 是一个正整数。
+
+示例 1：
+
+输入： 2
+输出： 2
+解释： 有两种方法可以爬到楼顶。
+1.  1 阶 + 1 阶
+2.  2 阶
+示例 2：
+
+输入： 3
+输出： 3
+解释： 有三种方法可以爬到楼顶。
+1.  1 阶 + 1 阶 + 1 阶
+2.  1 阶 + 2 阶
+3.  2 阶 + 1 阶
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/climbing-stairs
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+代码：
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        if n <= 3:
+            return n
+        a, b = 2, 3
+        for i in range(4, n + 1):
+            b = b + a
+            a = b - a
+        return b
+
+
+127. 单词接龙
+假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
+
+每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+
+注意：给定 n 是一个正整数。
+
+示例 1：
+
+输入： 2
+输出： 2
+解释： 有两种方法可以爬到楼顶。
+1.  1 阶 + 1 阶
+2.  2 阶
+示例 2：
+
+输入： 3
+输出： 3
+解释： 有三种方法可以爬到楼顶。
+1.  1 阶 + 1 阶 + 1 阶
+2.  1 阶 + 2 阶
+3.  2 阶 + 1 阶
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/climbing-stairs
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+代码：
+class Solution(object):
+    def ladderLength(self, beginWord, endWord, wordList):
+        """
+        :type beginWord: str
+        :type endWord: str
+        :type wordList: List[str]
+        :rtype: int
+        """
+        wordSet = set(wordList)
+        queue = [(beginWord, 1)]
+        while queue:
+            s, slen = queue.pop(0)
+            if s == endWord: return slen
+            for i in range(len(s)):
+                for c in range(97, 123):
+                    newword = s[0:i] + chr(c) + s[i+1: len(s)]
+                    if newword in wordSet:
+                        queue.append((newword, slen + 1))
+                        wordSet.remove(newword)
+        return 0
+        
+        
+ 37. 解数独
+ 写一个程序，通过填充空格来解决数独问题。
+
+数独的解法需 遵循如下规则：
+
+数字 1-9 在每一行只能出现一次。
+数字 1-9 在每一列只能出现一次。
+数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。（请参考示例图）
+数独部分空格内已填入了数字，空白格用 '.' 表示。
+
+ 
+
+示例：
+
+
+输入：board = [["5","3",".",".","7",".",".",".","."],["6",".",".","1","9","5",".",".","."],[".","9","8",".",".",".",".","6","."],["8",".",".",".","6",".",".",".","3"],["4",".",".","8",".","3",".",".","1"],["7",".",".",".","2",".",".",".","6"],[".","6",".",".",".",".","2","8","."],[".",".",".","4","1","9",".",".","5"],[".",".",".",".","8",".",".","7","9"]]
+输出：[["5","3","4","6","7","8","9","1","2"],["6","7","2","1","9","5","3","4","8"],["1","9","8","3","4","2","5","6","7"],["8","5","9","7","6","1","4","2","3"],["4","2","6","8","5","3","7","9","1"],["7","1","3","9","2","4","8","5","6"],["9","6","1","5","3","7","2","8","4"],["2","8","7","4","1","9","6","3","5"],["3","4","5","2","8","6","1","7","9"]]
+解释：输入的数独如上图所示，唯一有效的解决方案如下所示：
+
+
+ 
+
+提示：
+
+board.length == 9
+board[i].length == 9
+board[i][j] 是一位数字或者 '.'
+题目数据 保证 输入数独仅有一个解
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/sudoku-solver
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+代码：
+class Solution(object):
+    def solveSudoku(self, board):
+        """
+        :type board: List[List[str]]
+        :rtype: None Do not return anything, modify board in-place instead.
+        """
+        row = [set(range(1, 10)) for _ in range(9)]  
+        col = [set(range(1, 10)) for _ in range(9)]  
+        block = [set(range(1, 10)) for _ in range(9)]  
+
+        empty = []  
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] != '.':  
+                    val = int(board[i][j])
+                    row[i].remove(val)
+                    col[j].remove(val)
+                    block[(i // 3)*3 + j // 3].remove(val)
+                else:
+                    empty.append((i, j))
+
+        def backtrack(iter=0):
+            if iter == len(empty):  
+                return True
+            i, j = empty[iter]
+            b = (i // 3)*3 + j // 3
+            for val in row[i] & col[j] & block[b]:
+                row[i].remove(val)
+                col[j].remove(val)
+                block[b].remove(val)
+                board[i][j] = str(val)
+                if backtrack(iter+1):
+                    return True
+                row[i].add(val)  
+                col[j].add(val)
+                block[b].add(val)
+            return False
+        backtrack()
+
