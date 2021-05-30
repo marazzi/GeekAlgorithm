@@ -1,0 +1,133 @@
+212. 单词搜索 II
+
+给定一个 m x n 二维字符网格 board 和一个单词（字符串）列表 words，找出所有同时在二维网格和字典中出现的单词。
+
+单词必须按照字母顺序，通过 相邻的单元格 内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母在一个单词中不允许被重复使用。
+
+ 
+
+示例 1：
+
+
+输入：board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]
+输出：["eat","oath"]
+示例 2：
+
+
+输入：board = [["a","b"],["c","d"]], words = ["abcb"]
+输出：[]
+ 
+
+提示：
+
+m == board.length
+n == board[i].length
+1 <= m, n <= 12
+board[i][j] 是一个小写英文字母
+1 <= words.length <= 3 * 10^4
+1 <= words[i].length <= 10
+words[i] 由小写英文字母组成
+words 中的所有字符串互不相同
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/word-search-ii
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+代码：
+class Solution(object):
+    def findWords(self, board, words):
+        """
+        :type board: List[List[str]]
+        :type words: List[str]
+        :rtype: List[str]
+        """
+        m, n = len(board), len(board[0])
+        
+        root = {}
+        for w in words:
+            p = root
+            for c in w:
+                if c not in p:
+                    p[c] = {}
+                p = p[c]
+            p['finish'] = w
+
+        def dfs(start, p):
+            i, j = start[0], start[1]
+            c = board[i][j]
+
+            last = p[c].pop('finish', False)
+            if last:
+                res.append(last)
+            
+            board[i][j] = '#'
+            for x, y in [(1,0),(-1,0),(0,1),(0,-1)]:
+                ni, nj = i+x, j+y
+                if 0<=ni<m and 0<=nj<n and board[ni][nj] in p[c]:
+                    dfs((ni, nj), p[c])
+            board[i][j] = c
+
+            if not p[c]:
+                p.pop(c)
+
+        res = []
+        for i in range(m):
+            for j in range(n):
+                if board[i][j] in root:
+                    dfs((i, j), root)
+        return res
+        
+231. 2 的幂
+
+给你一个整数 n，请你判断该整数是否是 2 的幂次方。如果是，返回 true ；否则，返回 false 。
+
+如果存在一个整数 x 使得 n == 2x ，则认为 n 是 2 的幂次方。
+
+ 
+
+示例 1：
+
+输入：n = 1
+输出：true
+解释：20 = 1
+示例 2：
+
+输入：n = 16
+输出：true
+解释：24 = 16
+示例 3：
+
+输入：n = 3
+输出：false
+示例 4：
+
+输入：n = 4
+输出：true
+示例 5：
+
+输入：n = 5
+输出：false
+ 
+
+提示：
+
+-2^31 <= n <= 2^31 - 1
+ 
+
+进阶：你能够不使用循环/递归解决此问题吗？
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/power-of-two
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+代码：
+class Solution(object):
+    def isPowerOfTwo(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        if n>=0:
+            return bin(n).count('1')==1
+        else :
+            return bin(-n).count('1')==0
